@@ -21,10 +21,12 @@ namespace PingChart
         bool startPing = false;
         string target;
         List<PingResult> pingResults = new List<PingResult>();
+        DateTime startTime;
         public class PingResult
         {
-            public long PingTime { get; set; }
+            public long? PingTime { get; set; }
             public DateTime PingDateTime { get; set; }
+            public bool isSuccess { get; set; }
         }
         public frMain()
         {
@@ -36,6 +38,7 @@ namespace PingChart
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            startTime = DateTime.Now;
             //Test();
 
             if (tbIp.Text.Trim().Length == 0)
@@ -104,7 +107,7 @@ namespace PingChart
                     // 設定 Areas------------------------------------------------------------------------  
                     // 設定Y軸
                     PingChart.ChartAreas[0].AxisY.Maximum = 
-                    pingResults.OrderByDescending(x => x.PingDateTime).Take(yLen).Max(x => x.PingTime);
+                    pingResults.OrderByDescending(x => x.PingDateTime).Take(yLen).Max(x => (long)x.PingTime);
                                                                //PingChart.ChartAreas[0].AxisY.Maximum = 200;
                                                                // 設定X軸
                                                                //PingChart.ChartAreas[0].AxisX.Maximum = 2;
@@ -155,15 +158,29 @@ namespace PingChart
             {
                 lbMaxPing.Text = $"最高值：{pingResults.Max(x => x.PingTime)}";
                 lbMinPing.Text = $"最低值：{pingResults.Min(x => x.PingTime)}";
-                lbLoss.Text = $"丟失：{pingResults.Where(x=>x.PingTime == 0).Count()}";
+                lbAvg.Text = $"平均值：{(int)pingResults.Average(x => x.PingTime)}";
+                lbLoss.Text = $"丟失：{pingResults.Where(x=>x.isSuccess == false).Count()}";
                 lbPingCount.Text = $"Ping總數：{pingResults.Count()}";
+                var runningTime = DateTime.Now - startTime + TimeSpan.FromSeconds(1);
+                string runningTimeStr = "";
+                if ((int)runningTime.TotalDays > 0)
+                    runningTimeStr += $"{(int)(runningTime).TotalDays} 日";
+                if ((int)runningTime.TotalHours > 0)
+                    runningTimeStr += $"{((int)(runningTime).TotalHours) % 24} 時";
+                if ((int)runningTime.TotalMinutes > 0)
+                    runningTimeStr += $"{((int)(runningTime).TotalMinutes) % 60} 分";
+                if ((int)runningTime.TotalSeconds > 0)
+                    runningTimeStr += $"{((int)(runningTime).TotalSeconds) % 60} 秒";
+                lbRunningTime.Text = $"運行時間：{runningTimeStr}";
             }
             catch (Exception ex)
             {
                 lbMaxPing.Text = $"最高值：例外狀況";
                 lbMinPing.Text = $"最低值：例外狀況";
+                lbAvg.Text = $"平均值：例外狀況";
                 lbLoss.Text = $"丟失：例外狀況";
                 lbPingCount.Text = $"Ping總數：例外狀況";
+                lbRunningTime.Text = $"運行時間：例外狀況";
             }
         }
         #endregion
@@ -178,16 +195,18 @@ namespace PingChart
                 Ping p = new Ping();
                 var ip = tbIp.Text.Trim();
                 PingReply r = p.Send(ip);
-                long ping = 0;
+                long? ping = null;
+                bool isSuccess = false;
                 if (r.Status == IPStatus.Success)
                 {
                     ping = r.RoundtripTime;
                     message = string.Format($"IP:{0} pint test ok！ PingTime:{ping}", ip);
+                    isSuccess = true;
                 }
                 else
                     message = string.Format("IP:{0} pint test failed！", ip);
                 Console.WriteLine(message);
-                pingResults.Add(new PingResult() { PingTime = ping, PingDateTime = DateTime.Now });
+                pingResults.Add(new PingResult() { PingTime = ping, PingDateTime = DateTime.Now, isSuccess = isSuccess });
             }
             catch (Exception ex)
             {

@@ -28,14 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbPingCount = new System.Windows.Forms.Label();
             this.lbLoss = new System.Windows.Forms.Label();
             this.lbMinPing = new System.Windows.Forms.Label();
             this.lbMaxPing = new System.Windows.Forms.Label();
@@ -44,7 +45,8 @@
             this.tbIp = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.PingChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.lbPingCount = new System.Windows.Forms.Label();
+            this.lbAvg = new System.Windows.Forms.Label();
+            this.lbRunningTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -69,28 +71,40 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.PingChart);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 701);
+            this.splitContainer1.Size = new System.Drawing.Size(1054, 701);
             this.splitContainer1.SplitterDistance = 90;
             this.splitContainer1.TabIndex = 0;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbRunningTime);
+            this.groupBox1.Controls.Add(this.lbAvg);
             this.groupBox1.Controls.Add(this.lbPingCount);
             this.groupBox1.Controls.Add(this.lbLoss);
             this.groupBox1.Controls.Add(this.lbMinPing);
             this.groupBox1.Controls.Add(this.lbMaxPing);
             this.groupBox1.Location = new System.Drawing.Point(4, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(425, 85);
+            this.groupBox1.Size = new System.Drawing.Size(678, 85);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "狀態";
+            // 
+            // lbPingCount
+            // 
+            this.lbPingCount.AutoSize = true;
+            this.lbPingCount.Font = new System.Drawing.Font("新細明體", 14F);
+            this.lbPingCount.Location = new System.Drawing.Point(410, 16);
+            this.lbPingCount.Name = "lbPingCount";
+            this.lbPingCount.Size = new System.Drawing.Size(99, 19);
+            this.lbPingCount.TabIndex = 6;
+            this.lbPingCount.Text = "Ping總數：";
             // 
             // lbLoss
             // 
             this.lbLoss.AutoSize = true;
             this.lbLoss.Font = new System.Drawing.Font("新細明體", 14F);
-            this.lbLoss.Location = new System.Drawing.Point(209, 18);
+            this.lbLoss.Location = new System.Drawing.Point(228, 59);
             this.lbLoss.Name = "lbLoss";
             this.lbLoss.Size = new System.Drawing.Size(66, 19);
             this.lbLoss.TabIndex = 5;
@@ -121,7 +135,7 @@
             this.gbInput.Controls.Add(this.btnStart);
             this.gbInput.Controls.Add(this.tbIp);
             this.gbInput.Controls.Add(this.label1);
-            this.gbInput.Location = new System.Drawing.Point(435, 3);
+            this.gbInput.Location = new System.Drawing.Point(688, 4);
             this.gbInput.Name = "gbInput";
             this.gbInput.Size = new System.Drawing.Size(362, 84);
             this.gbInput.TabIndex = 0;
@@ -159,42 +173,52 @@
             // 
             // PingChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.PingChart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.PingChart.ChartAreas.Add(chartArea2);
             this.PingChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            legend2.Name = "Legend2";
-            legend3.Name = "Legend3";
-            legend4.Name = "Legend4";
-            this.PingChart.Legends.Add(legend1);
-            this.PingChart.Legends.Add(legend2);
-            this.PingChart.Legends.Add(legend3);
-            this.PingChart.Legends.Add(legend4);
+            legend5.Name = "Legend1";
+            legend6.Name = "Legend2";
+            legend7.Name = "Legend3";
+            legend8.Name = "Legend4";
+            this.PingChart.Legends.Add(legend5);
+            this.PingChart.Legends.Add(legend6);
+            this.PingChart.Legends.Add(legend7);
+            this.PingChart.Legends.Add(legend8);
             this.PingChart.Location = new System.Drawing.Point(0, 0);
             this.PingChart.Margin = new System.Windows.Forms.Padding(0);
             this.PingChart.Name = "PingChart";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend2";
-            series1.Name = "Series1";
-            this.PingChart.Series.Add(series1);
-            this.PingChart.Size = new System.Drawing.Size(800, 607);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend2";
+            series2.Name = "Series1";
+            this.PingChart.Series.Add(series2);
+            this.PingChart.Size = new System.Drawing.Size(1054, 607);
             this.PingChart.TabIndex = 0;
             this.PingChart.Text = "圖表";
             // 
-            // lbPingCount
+            // lbAvg
             // 
-            this.lbPingCount.AutoSize = true;
-            this.lbPingCount.Font = new System.Drawing.Font("新細明體", 14F);
-            this.lbPingCount.Location = new System.Drawing.Point(209, 59);
-            this.lbPingCount.Name = "lbPingCount";
-            this.lbPingCount.Size = new System.Drawing.Size(99, 19);
-            this.lbPingCount.TabIndex = 6;
-            this.lbPingCount.Text = "Ping總數：";
+            this.lbAvg.AutoSize = true;
+            this.lbAvg.Font = new System.Drawing.Font("新細明體", 14F);
+            this.lbAvg.Location = new System.Drawing.Point(209, 16);
+            this.lbAvg.Name = "lbAvg";
+            this.lbAvg.Size = new System.Drawing.Size(85, 19);
+            this.lbAvg.TabIndex = 7;
+            this.lbAvg.Text = "平均值：";
+            // 
+            // lbRunningTime
+            // 
+            this.lbRunningTime.AutoSize = true;
+            this.lbRunningTime.Font = new System.Drawing.Font("新細明體", 14F);
+            this.lbRunningTime.Location = new System.Drawing.Point(405, 57);
+            this.lbRunningTime.Name = "lbRunningTime";
+            this.lbRunningTime.Size = new System.Drawing.Size(104, 19);
+            this.lbRunningTime.TabIndex = 8;
+            this.lbRunningTime.Text = "運行時間：";
             // 
             // frMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(800, 701);
+            this.ClientSize = new System.Drawing.Size(1054, 701);
             this.Controls.Add(this.splitContainer1);
             this.Name = "frMain";
             this.Text = "Ping測試程式";
@@ -225,6 +249,8 @@
         private System.Windows.Forms.Label lbMinPing;
         private System.Windows.Forms.Label lbLoss;
         private System.Windows.Forms.Label lbPingCount;
+        private System.Windows.Forms.Label lbAvg;
+        private System.Windows.Forms.Label lbRunningTime;
     }
 }
 
